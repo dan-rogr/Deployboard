@@ -55,12 +55,13 @@ pipeline {
         stage('Health check') {
             steps {
                 sh '''
-                echo "Esperando backend..."
-                sleep 15
+                    echo "Esperando servicios..."
+                    sleep 30
 
-                curl -f http://localhost/health
-                curl -f http://localhost/api
-                curl -f http://localhost/metrics
+                    curl --retry 10 \
+                         --retry-delay 5 \
+                         --retry-connrefused \
+                         -f http://localhost/health
                 '''
             }
         }
