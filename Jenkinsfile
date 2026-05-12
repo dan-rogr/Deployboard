@@ -71,7 +71,7 @@ pipeline {
                     curl --retry 10 \
                          --retry-delay 5 \
                          --retry-connrefused \
-                         -f http://deployboard-nginx/health
+                         -f http://localhost/health
                 '''
             }
         }
