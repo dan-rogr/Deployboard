@@ -25,9 +25,6 @@ services:
       - "5000:5000"
     depends_on:
       - postgres
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
 
   prometheus:
     image: prom/prometheus:latest
@@ -36,7 +33,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./monitoring/prometheus:/etc/prometheus
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     depends_on:
       - backend
 
