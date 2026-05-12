@@ -48,7 +48,17 @@ pipeline {
 
         stage('Start stack') {
             steps {
-                sh 'docker compose -f ${COMPOSE_FILE} -f ${COMPOSE_DEV_FILE} up -d --build'
+                sh '''
+                    docker compose -f docker-compose.yml -f docker-compose.dev.yml down --remove-orphans || true
+
+                    docker rm -f deployboard-postgres \
+                         deployboard-backend \
+                         deployboard-prometheus \
+                         deployboard-grafana \
+                         deployboard-nginx || true
+
+                    docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+                '''
             }
         }
 
