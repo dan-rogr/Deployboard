@@ -1,25 +1,4 @@
-CREATE TABLE IF NOT EXISTS projects (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS services (
     id SERIAL PRIMARY KEY,
-    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
-    name VARCHAR(100) NOT NULL,
-    url TEXT NOT NULL,
-    status VARCHAR(20) DEFAULT 'unknown',
-    latency_ms INTEGER,
-    last_checked_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS service_checks (
-    id SERIAL PRIMARY KEY,
-    service_id INTEGER NOT NULL REFERENCES services(id) ON DELETE CASCADE,
-    status VARCHAR(20) NOT NULL,
-    latency_ms INTEGER,
-    checked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    name VARCHAR(255)
 );
