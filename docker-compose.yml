@@ -20,7 +20,7 @@ services:
     container_name: deployboard-backend
     restart: unless-stopped
     env_file:
-      - ./backend/.env.docker
+      - ./backend/.env.docker.example
     ports:
       - "5000:5000"
     depends_on:
