@@ -1,0 +1,21 @@
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: deployboard-jenkins
+    user: root
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    networks:
+      - deployboard-network
+
+volumes:
+  jenkins_data:
+
+networks:
+  deployboard-network:
+    driver: bridge

@@ -1,0 +1,22 @@
+services:
+  backend:
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  postgres:
+    ports:
+      - "5433:5432"
+
+  prometheus:
+    ports:
+      - "9090:9090"
+
+  grafana:
+    ports:
+      - "3000:3000"
+
+  nginx:
+    ports:
+      - "80:80"
