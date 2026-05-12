@@ -49,7 +49,7 @@ pipeline {
         stage('Start stack') {
             steps {
                 sh '''
-                    docker compose -f docker-compose.yml -f docker-compose.dev.yml down --remove-orphans || true
+                    docker compose -f docker-compose.yml -f docker-compose.dev.yml down -v --remove-orphans || true
 
                     docker rm -f deployboard-postgres \
                          deployboard-backend \
@@ -71,7 +71,7 @@ pipeline {
                     curl --retry 10 \
                          --retry-delay 5 \
                          --retry-connrefused \
-                         -f http://localhost/health
+                         -f http://host.docker.internal/health
                 '''
             }
         }
