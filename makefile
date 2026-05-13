@@ -1,5 +1,7 @@
 COMPOSE_DEV=docker compose -f docker-compose.yml -f docker-compose.dev.yml
 
+.PHONY: dev up down logs restart clean ps jenkins jenkins-logs jenkins-down
+
 dev:
 	$(COMPOSE_DEV) up --build
 
