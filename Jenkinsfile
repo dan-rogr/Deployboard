@@ -6,12 +6,13 @@ pipeline {
         IMAGE_NAME = 'deployboard-backend'
         COMPOSE_FILE = 'docker-compose.yml'
         COMPOSE_DEV_FILE = 'docker-compose.dev.yml'
+        HEALTHCHECK_URL = 'http://host.docker.internal/health'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Obteniendo código fuente...'
+                echo 'Obteniendo codigo fuente...'
                 checkout scm
             }
         }
@@ -42,22 +43,22 @@ pipeline {
 
         stage('Validate Docker Compose') {
             steps {
-                sh 'docker compose -f ${COMPOSE_FILE} -f ${COMPOSE_DEV_FILE} config'
+                sh 'docker-compose -f ${COMPOSE_FILE} -f ${COMPOSE_DEV_FILE} config'
             }
         }
 
         stage('Start stack') {
             steps {
                 sh '''
-                    docker compose -f docker-compose.yml -f docker-compose.dev.yml down -v --remove-orphans || true
+                    docker-compose -f ${COMPOSE_FILE} -f ${COMPOSE_DEV_FILE} down -v --remove-orphans || true
 
                     docker rm -f deployboard-postgres \
-                         deployboard-backend \
-                         deployboard-prometheus \
-                         deployboard-grafana \
-                         deployboard-nginx || true
+                        deployboard-backend \
+                        deployboard-prometheus \
+                        deployboard-grafana \
+                        deployboard-nginx || true
 
-                    docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+                    docker-compose -f ${COMPOSE_FILE} -f ${COMPOSE_DEV_FILE} up -d --build
                 '''
             }
         }
@@ -69,9 +70,9 @@ pipeline {
                     sleep 30
 
                     curl --retry 10 \
-                         --retry-delay 5 \
-                         --retry-connrefused \
-                         -f http://localhost/health
+                        --retry-delay 5 \
+                        --retry-connrefused \
+                        -f ${HEALTHCHECK_URL}
                 '''
             }
         }
@@ -83,13 +84,13 @@ pipeline {
         }
 
         failure {
-            echo 'El pipeline falló. Revisar logs de Jenkins.'
-            sh 'docker compose -f docker-compose.yml -f docker-compose.dev.yml logs --tail=100 || true'
+            echo 'El pipeline fallo. Revisar logs de Jenkins.'
+            sh 'docker-compose -f ${COMPOSE_FILE} -f ${COMPOSE_DEV_FILE} logs --tail=100 || true'
         }
 
         always {
             echo 'Estado final de contenedores:'
-            sh 'docker compose -f docker-compose.yml -f docker-compose.dev.yml ps || true'
+            sh 'docker-compose -f ${COMPOSE_FILE} -f ${COMPOSE_DEV_FILE} ps || true'
         }
     }
 }

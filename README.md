@@ -429,6 +429,56 @@ docker-compose.yml
 docker-compose.dev.yml
 ```
 
+## Jenkins configuration
+
+```txt
+docker-compose.jenkins.yml
+Jenkinsfile
+jenkins/Dockerfile
+```
+
+---
+
+# Jenkins CI Pipeline
+
+This repository includes a Jenkins pipeline ready to validate and start the stack.
+
+## What the pipeline does
+
+* Checks out the repository
+* Installs backend dependencies
+* Runs `npm test` and `npm run lint` if present
+* Builds the backend Docker image
+* Validates Docker Compose configuration
+* Starts the full stack with Docker Compose
+* Executes a health check against `/health`
+
+## Start Jenkins locally
+
+```bash
+make jenkins
+```
+
+Jenkins will be exposed on:
+
+```txt
+http://localhost:8080
+```
+
+## Useful Jenkins commands
+
+```bash
+make jenkins
+make jenkins-logs
+make jenkins-down
+```
+
+## Pipeline requirements
+
+* Docker must be available on the host machine
+* Jenkins uses the host Docker socket to build images and start containers
+* The pipeline expects the repository job to use the root `Jenkinsfile`
+
 ---
 
 # Environment Variables
@@ -490,7 +540,6 @@ This project was built to practice and demonstrate:
 
 Planned improvements:
 
-* CI/CD with Jenkins
 * Terraform infrastructure
 * AWS deployment
 * HTTPS with Certbot
